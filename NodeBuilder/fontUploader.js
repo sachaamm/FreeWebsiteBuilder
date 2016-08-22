@@ -72,6 +72,7 @@ function giveAutomaticFontName(fontFile){
 }
 
 
+var bodyParser = require('body-parser'); // Charge le middleware de gestion des paramètres
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
