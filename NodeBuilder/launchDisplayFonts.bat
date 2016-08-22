@@ -1,0 +1,2 @@
+node fontUploader.js
+pause

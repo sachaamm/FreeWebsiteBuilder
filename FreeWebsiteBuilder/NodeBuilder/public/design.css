@@ -1,0 +1,78 @@
+
+*{
+	font-family:AnonymousPro-Bold
+}
+
+@font-face{
+	font-family:AnonymousPro-Bold;
+	src:url(./fonts/AnonymousPro-Bold.ttf);
+}
+@font-face{
+	font-family:DoubleShadow;
+	src:url(./fonts/DoubleShadow.ttf);
+}
+@font-face{
+	font-family:DroidSerif-Regular;
+	src:url(./fonts/DroidSerif-Regular.ttf);
+}
+@font-face{
+	font-family:FreeMonogram_Beta_0;
+	src:url(./fonts/FreeMonogram_Beta_0.5.otf);
+}
+@font-face{
+	font-family:Mayton;
+	src:url(./fonts/Mayton.ttf);
+}
+@font-face{
+	font-family:miso-bold;
+	src:url(./fonts/miso-bold.otf);
+}
+@font-face{
+	font-family:miso;
+	src:url(./fonts/miso.otf);
+}
+@font-face{
+	font-family:NixieOne;
+	src:url(./fonts/NixieOne.ttf);
+}
+@font-face{
+	font-family:OpenSansRegular;
+	src:url(./fonts/OpenSansRegular.ttf);
+}
+@font-face{
+	font-family:Outrun-future-Bold;
+	src:url(./fonts/Outrun-future-Bold.otf);
+}
+@font-face{
+	font-family:Outrun-future;
+	src:url(./fonts/Outrun-future.otf);
+}
+@font-face{
+	font-family:Phorssa;
+	src:url(./fonts/Phorssa.ttf);
+}
+@font-face{
+	font-family:Roboto-Bold;
+	src:url(./fonts/Roboto-Bold.ttf);
+}
+@font-face{
+	font-family:Roboto-Regular;
+	src:url(./fonts/Roboto-Regular.ttf);
+}
+@font-face{
+	font-family:RobotoCondensed-Bold_Big;
+	src:url(./fonts/RobotoCondensed-Bold_Big.ttf);
+}
+@font-face{
+	font-family:RobotoCondensed-Bold_Med;
+	src:url(./fonts/RobotoCondensed-Bold_Med.ttf);
+}
+@font-face{
+	font-family:RobotoCondensed-Bold_Small;
+	src:url(./fonts/RobotoCondensed-Bold_Small.ttf);
+}
+@font-face{
+	font-family:Sanctuaire-du-Machiniste;
+	src:url(./fonts/Sanctuaire-du-Machiniste.ttf);
+}
+
