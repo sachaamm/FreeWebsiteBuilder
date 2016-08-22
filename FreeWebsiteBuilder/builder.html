@@ -1,0 +1,980 @@
+<!-- WEBSITEBUILDERJS -->
+
+<head>
+  
+  
+    <meta charset="utf-8">
+   
+    <title>cMSjS</title>
+	
+    <link href="colorpicker/color-picker-master/color-picker.min.css" rel="stylesheet">
+	
+	<!--
+    <style>
+	
+    html {
+      background:#fff url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCAAUABQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9Ja6LSf8AkHxfj/M0f2Ta/wDPL/x4/wCNZ13dy2Nw8ED7IlxhcA4yM9/rQBu0Vzv9rXX/AD1/8dH+FFAHRVzurf8AIQl/D+QoooAp0UUUAf/Z') repeat 50% 50%;
+      margin:0;
+      padding:0;
+    }
+    body {
+      background-color:white;
+      margin:0;
+      padding:50px;
+    }
+    .color-picker input {
+      margin:2px 0 0;
+      padding:0;
+      display:block;
+      width:100%;
+      cursor:ew-resize;
+    }
+	
+	
+    </style>
+	-->
+	
+	
+</head>
+
+
+
+<body>
+
+
+<!-- GIZMOS -->
+
+<img src="icon/stretch2.png" id="stretch" style="position:absolute;z-index:3;" width=20 height=20/>
+<img src="icon/move2.png" id="move" style="position:absolute;z-index:3;" width=20 height=20/>
+<img src="icon/edit2.png" id="edit" style="position:absolute;z-index:3;" width=20 height=20/>
+
+
+<!-- PANEL MENU -->
+
+<ul style="opacity:0" class="navigation">
+ 
+   <li class="toggleSubMenu">
+   
+   <span>Create Element
+   </span>
+    <ul class="subMenu">
+      <li><a  onclick="prepareElement('div')" title="<div>">div</a></li>
+	  <li><a  onclick="prepareElement('p')"title="<div>">p</a></li>
+      <li><a  onclick="prepareElement('h1')"title="<h1>">h1</a></li>
+      <li><a  onclick="prepareElement('img')"title="<h1>">img</a></li>
+     
+    </ul>
+    </li>
+	
+	
+</ul>
+
+
+<!-- GHOSTS -->
+
+<div id="ghostDiv"  style="position:absolute;background-color:black;width:280px;height:80px;z-index:-1;display:none" ></div>
+<p id="ghostP"  style="position:absolute;border:solid;border-width:0.1px;width:280px;height:40px;z-index:-1;display:none" ></p>
+<h1 id="ghostH"  style="position:absolute;border:solid;border-width:1px;top:30%;width:280px;height:40px;z-index:-1;display:none" >My Title</h1>
+<img id="ghostPic" src ="icon/picture.png" style="position:absolute;width:280px;height:280px;z-index:-1;display:none" />
+
+</br></br></br></br>
+<h1>cMSjS</h1>
+
+<!-- SAVE -->
+
+<img id="mySaveIco" src="icon/save.png" style="position:absolute;left:1%;top:50%" onclick="prepareSaving()" width=30 height=30 />
+<input id="savingFileName" type="text" onchange="saveFile()" style ="position:absolute;top:57%;left:10%;display:none" />
+
+
+<!-- EDITABLE FORM -->
+
+<!-- Editable Form Title -->
+<h2 id="editableFormTitle" style = "position:absolute;top:0%;right:10%;display:none" ></h2>
+<!-- BackgroundColor ColorPicker -->
+<h4 id="bgdCPTitle" style = "position:absolute;top:15%;right:10%;display:none" >Background Color</h4>
+<p><input id="colorPickerInput" style = "position:absolute;right:10%;top:20%;display:none" type="text" value="rgb(255, 0, 0)"></p>
+<!-- File Src Selector -->
+<input id="fileSrcSelector" type="file" onchange="updateFileSrc()" style ="position:absolute;top:30%;right:10%;display:none" />
+<!-- Text Edition -->
+<textarea id="titleInput" style = "position:absolute;top:30%;right:2%;width:20%;height:38%;display:none" type="text" value="" ></textarea>
+
+ 
+ 
+<!-- Color Picker -->
+<script src="colorpicker/color-picker-master/color-picker.min.js"></script>
+<!-- JQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+
+
+
+
+<script type="text/javascript">
+
+    var storage = {}; // Contient l'objet de la div en cours de déplacement	
+	var elementAssigned = null;
+	var copyElement = null;
+		
+	var stretch = document.getElementById("stretch");
+	var stretching = false;	
+	var move = document.getElementById("move");
+	var moving = false;
+	var edit = document.getElementById("edit");
+	var editing = false;
+	
+	var gizmoW = 20;
+	stretch.width = gizmoW;
+	move.width = gizmoW;
+	edit.width = gizmoW;
+	
+	
+	var preparing = false;
+	
+	
+	var ghostDiv = document.getElementById("ghostDiv");
+	var ghostP = document.getElementById("ghostP");
+	var fadingTime = 1000;
+	
+	var yOffsetGhostH = 50;
+	var yOffsetPicture = 20;
+	
+	var grabbingThreshold = 20;
+	
+	var saveElements=[];// Elements
+	
+	var indexUnique = 0;
+	
+	
+	
+	var xPositions = [];
+	var yPositions = [];
+	
+	var controlKeyDown = false;
+	
+	
+	
+	/*
+	// LOAD FONT
+	$("head").prepend("<style type=\"text/css\">" + 
+                                "@font-face {\n" +
+                                    "\tfont-family: \"myFont\";\n" + 
+                                    "\tsrc: local('☺'), url('myFont.otf') format('opentype');\n" + 
+                                "}\n" + 
+                                    "\tp.myClass {\n" + 
+                                    "\tfont-family: myFont !important;\n" + 
+                                "}\n" + 
+                            "</style>");
+	*/
+	
+
+
+	
+	
+	///////////////////////////////
+	// TEXT    
+	//
+	
+	// -> Update Text from the editing form
+	$('#titleInput').bind('input', function() { 
+   	$(elementAssigned).text($('#titleInput').val());
+	});
+
+	// -> Sync Editing form Text when we select a new element
+	function syncText(){
+	$('#titleInput').val($(elementAssigned).text());	
+	}
+	
+
+			
+	//////////////////////////////////
+	// EDITING FORM
+	//
+	
+	function buildEditingForm(nodeName){
+	
+		if(nodeName == 'DIV'){
+			$("#editableFormTitle").text('Edit Div');
+			$("#colorPickerInput").fadeIn(fadingTime);	
+		}
+	
+		if(nodeName == 'H1'){
+			$("#editableFormTitle").text('Edit Title');
+			$("#bgdCPTitle").fadeIn(fadingTime);	
+			$("#colorPickerInput").fadeIn(fadingTime);
+			$("#titleInput").fadeIn(fadingTime);
+			syncText();
+		}
+			
+		if(nodeName == 'P'){
+			$("#editableFormTitle").text('Edit Paragraph');
+			$("#bgdCPTitle").fadeIn(fadingTime);
+			$("#colorPickerInput").fadeIn(fadingTime);
+			$("#titleInput").fadeIn(fadingTime);
+			syncText();
+		}
+		
+		if(nodeName == 'IMG'){
+			$("#editableFormTitle").text('EditImage');
+			$("#fileSrcSelector").fadeIn(fadingTime);
+		}
+	
+	
+	}
+	
+	function removeEditingForm(){
+	
+		$("#bgdCPTitle").css("display",'none');
+		$("#colorPickerInput").css("display",'none');
+		$("#editableFormTitle").css("display",'none');
+		$("#fileSrcSelector").css("display",'none');
+		$("#titleInput").css("display",'none');
+	
+	}	
+	
+	
+	/////////////////////////////////
+	// KEY EVENTS
+	//
+	
+	document.addEventListener('keydown', (event) => {
+	
+	if(event.key == "Control"){
+	 controlKeyDown = true;
+	
+	}
+	
+	if(controlKeyDown && event.key == 'c'){
+	
+		if(elementAssigned){
+		copyElement = elementAssigned;
+		}
+	
+	}
+	
+	// -> Paste Element 
+	if(controlKeyDown && event.key == 'v'){
+	
+		if(copyElement){
+	
+		prependElement = getHTMLElementAsString(copyElement.nodeName,indexUnique);
+		$('body').prepend(prependElement);
+		
+		
+		var topValue = prependElement.match(/top:[\s\S]*?;/);
+		var nTop = ''+topValue;
+		
+		nTop = nTop.replace('top:','');
+		nTop = nTop.replace('px;','');
+
+		var leftValue = prependElement.match(/left:[\s\S]*?;/);
+		var nLeft = ''+leftValue;
+		
+		nLeft = nLeft.replace('top:','');
+		nLeft = nLeft.replace('px;','');
+
+		alert(nLeft);
+	
+		addEventsToPrependedObject(copyElement.nodeName);
+	
+		saveElements.push(new Element(indexUnique,this,prependElement));		
+		indexUnique++;	
+		elementAssigned = copyElement;
+	
+		}
+	
+	}
+	
+	});
+	
+		
+	document.addEventListener('keyup', (event) => {
+
+	if(event.key == "Control") controlKeyDown = false;
+	
+	});
+	
+
+	
+	
+		
+	// ENABLE/ DISABLE EDITION MODE
+	function toggleEdit(){
+	
+		if(editing){
+	
+		edit.src = "icon/edit3.png"
+	
+		buildEditingForm(elementAssigned.nodeName);
+		$("#editableFormTitle").fadeIn(fadingTime);
+	
+		}else{
+	
+		edit.src = "icon/edit2.png"
+		removeEditingForm();
+		updateHTMLElement();
+	
+	}
+	
+	
+	}	
+		
+	// UPDATE HTML ELEMENT STYLE IN saveElements ARRAY
+	function updateHTMLElement(){
+	
+		var indexAssigned = elementAssigned.getAttribute("index");
+		for(var i = 0 ; i < saveElements.length ; i++){
+			
+			if(saveElements[i].index == indexAssigned){	
+			saveElements[i].nodeString = getHTMLElementAsString(saveElements[i].elementObject.nodeName,saveElements[i].index);	
+			}
+			
+		}
+	
+	}
+	
+	// GET HTML ELEMENT ENTIRE TAGS WITH ATTRIBUTES AS STRING
+	function getHTMLElementAsString(elementNodeName,index){ 
+	
+	var classValue = returnClassReferringToNodeName(elementNodeName);
+	
+	if(isDoubleMarkTag(elementNodeName)){
+	
+			var text = $(elementAssigned).text();
+			
+			return  '<' + elementNodeName + ' index="'+index+'" class="'+classValue+'" style="' + elementAssigned.style.cssText + '">'+text+'</' + elementNodeName + '>';
+			
+			}else{
+			
+			var src = $(elementAssigned).attr('src');
+			//IMG
+			return '<' + elementNodeName + ' src="'+src+'" class="'+classValue+'" index="'+index+'" style="' + elementAssigned.style.cssText + '"/>';
+			
+			
+		}
+	
+	return '';
+	}
+
+	// CHECK IF IS IT A DOUBLE MARK ELEMENT , WHICH MEANS DIFFERENT ELEMENTNODESTRING PROCESSING
+	function isDoubleMarkTag(tag){
+	
+	if(tag == 'IMG')return false;
+	
+	return true;
+	
+	
+	}
+
+	// RETURN CLASSNAME TO ADD EVENT LISTENERS ON IT
+	function returnClassReferringToNodeName(nodeName){
+	
+	if(nodeName == 'DIV') return 'draggableBox';
+	if(nodeName == 'P') return 'draggableP';
+	if(nodeName == 'H1') return 'draggableH';
+	if(nodeName == 'IMG') return 'draggablePic';
+	
+	return 'undefinedClass';
+	}
+	
+	
+	
+	
+	
+	
+	
+	// -> Add Event Listeners to prepended Objects
+	function addEventsToPrependedObject(nodeName){
+	
+	
+	if(nodeName == 'DIV'){
+	
+		$(".draggableBox").off(); // DONT STACK LISTENERS
+		
+		$(".draggableBox").mouseup(function(e){ //MOUSE UP EVENT
+		storage = {};
+		fixGizmoPosition(e);	
+		displayGizmo();
+		});
+
+		//HOVER EVENT  --> ASSIGN STRETCH GIZMO TO DRAGGABLE
+		$(".draggableBox").mouseenter(function(e){
+		if(stretching || moving)return;
+		if(editing)return;
+		elementAssigned = this;
+		fixGizmoPosition(e);	
+		});
+
+		$("#ghostDiv").css("display",'none');
+			
+	}
+	
+	
+	if(nodeName == 'P'){
+	
+		$(".draggableP").off(); // DONT STACK LISTENERS
+		
+	
+	//HOVER EVENT  --> ASSIGN STRETCH GIZMO TO DRAGGABLE
+		$(".draggableP").mouseenter(function(e){
+		if(stretching || moving)return;
+		if(editing)return;
+		elementAssigned = this;			
+		fixGizmoPosition(e);
+
+		});
+	
+	$("#ghostP").css("display",'none');
+
+	}
+	
+
+	if(nodeName == 'H1'){
+	
+		$(".draggableH").off(); // DONT STACK LISTENERS
+		
+		//HOVER EVENT  --> ASSIGN STRETCH GIZMO TO DRAGGABLE
+		$(".draggableH").mouseenter(function(e){
+		if(stretching || moving)return;
+		if(editing)return;
+		elementAssigned = this;			
+		fixGizmoPosition(e);
+
+		});
+		
+		
+	
+	$("#ghostH").css("display",'none');
+	}
+	
+	if(nodeName == 'IMG'){
+	
+	
+		$(".draggableImg").off(); // DONT STACK LISTENERS
+		
+	//HOVER EVENT  --> ASSIGN STRETCH GIZMO TO DRAGGABLE
+		$(".draggablePic").mouseenter(function(e){
+		if(stretching || moving)return;
+		if(editing)return;
+		elementAssigned = this;			
+		fixGizmoPosition(e);
+
+		});
+	
+	$("#ghostPic").css("display",'none');
+	}
+	
+	
+	
+	
+	$(".navigation").fadeIn(fadingTime);
+	preparing = false;
+	
+	
+	}
+	
+	
+	
+	
+	
+	
+
+	
+	// -> Update File Source ( Image , Video , Audio )
+	function updateFileSrc(){
+	
+	var path = $("#fileSrcSelector").val();
+	var nPath = path.replace("C:\\fakepath\\","pictures\\");
+	elementAssigned.src = nPath;
+	
+	}
+
+	
+
+	
+	
+	
+	
+	
+	// PREPARE TO BUILD A NEW ELEMENT ON THE DOCUMENT
+	function prepareElement(type){
+	
+	preparing = true;
+
+	 $(".navigation ul.subMenu").slideUp("normal", function () { $(this).parent().removeClass("open") }); // close panel
+	 
+	 if(type=='div'){ $("#ghostDiv").css('z-index','1'); $("#ghostDiv").fadeIn(fadingTime);  }
+	 if(type=='p'){ $("#ghostP").css('z-index','1'); $("#ghostP").fadeIn(fadingTime);  }
+	 if(type=='h1'){ $("#ghostH").css('z-index','1'); $("#ghostH").fadeIn(fadingTime);  }
+	 if(type=='img'){ $("#ghostPic").css('z-index','1'); $("#ghostPic").fadeIn(fadingTime);  }
+	 
+	 $(".navigation").fadeOut(fadingTime);
+	
+	}	
+	
+	//ADD DIV ELEMENT
+	$("#ghostDiv").click(function(e){
+	
+		if(!preparing)return;   // on apelle cette fonction alors qu on est pas dans la preparation d un element
+		var prependElement = '<div index="'+indexUnique+'" class="draggableBox" style="position:absolute;background-color:black;width:280px;height:80px;top:'+(e.clientY-20) +'px;left:'+(e.clientX-20)+'px" ></div> ';
+		$('body').prepend(prependElement);
+		
+		saveElements.push(new Element(indexUnique,this,prependElement));
+		indexUnique++;
+		
+		addEventsToPrependedObject('DIV');
+		
+	});
+		
+	//ADD P ELEMENT
+	$("#ghostP").click(function(e){
+		if(!preparing)return;   // on apelle cette fonction alors qu on est pas dans la preparation d un element
+		var prependElement = '<p index="'+indexUnique+'" type="text" class="draggableP" style="position:absolute;border:solid;border-width:0.1px;width:280px;height:40px;top:'+(e.clientY-20) +'px;left:'+(e.clientX-20)+'px">   </p> ';
+	
+		$('body').prepend(prependElement);
+		saveElements.push(new Element(indexUnique,this,prependElement));
+		indexUnique++;
+		
+		addEventsToPrependedObject('P');
+	
+	});
+
+	//ADD TITLE ELEMENT
+	$("#ghostH").click(function(e){
+		if(!preparing)return;   // on apelle cette fonction alors qu on est pas dans la preparation d un element
+		var prependElement = '<h1 index="'+indexUnique+'"  class="draggableH" style="position:absolute;border:solid;border-width:1px;width:280px;height:40px;top:'+(e.clientY-yOffsetGhostH) +'px;left:'+(e.clientX-20)+'px">My Title<h1 /> ';
+		$('body').prepend(prependElement);
+		saveElements.push(new Element(indexUnique,this,prependElement));
+		indexUnique++;
+		
+		addEventsToPrependedObject('H1');
+			
+	});
+	
+	//ADD IMG ELEMENT
+	$("#ghostPic").click(function(e){
+		if(!preparing)return;   // on apelle cette fonction alors qu on est pas dans la preparation d un element
+		var prependElement = '<img index="'+indexUnique+'"  src="../picture.png" class="draggablePic" style="position:absolute;width:280px;height:280px;top:'+(e.clientY-yOffsetPicture) +'px;left:'+(e.clientX-20)+'px" > ';
+		$('body').prepend(prependElement);
+		saveElements.push(new Element(indexUnique,this,prependElement));
+		indexUnique++;
+	
+		addEventsToPrependedObject('IMG');
+
+	$(".navigation").fadeIn(fadingTime);
+	preparing = false;
+	
+	});
+	
+	
+	document.addEventListener('mousemove', function(e) { // Permet le suivi du drag & drop
+            	
+			if(preparing){
+			
+			ghostDiv.style.top =e.clientY - 20;
+			ghostDiv.style.left =e.clientX - 20;
+			ghostP.style.top =e.clientY - 20;
+			ghostP.style.left =e.clientX - 20;	
+			ghostH.style.top =e.clientY - yOffsetGhostH;
+			ghostH.style.left =e.clientX - 20;	
+			ghostPic.style.top =e.clientY - yOffsetPicture;
+			ghostPic.style.left =e.clientX - 20;
+			
+			}
+			
+			// STRETCHING EVENT
+			if( stretching && elementAssigned ){
+			
+			stretch.style.top = e.clientY + 'px';
+			stretch.style.left = e.clientX + 'px';	
+			stretch.style.marginLeft = 0;
+			stretch.style.marginTop = 0;
+
+			elementAssigned.style.width = (cSI(stretch.style.left)- cSI(elementAssigned.style.left))+ "px";
+			elementAssigned.style.height = (cSI(stretch.style.top)- cSI(elementAssigned.style.top)) + "px";
+			
+			move.style.opacity = 0;
+			edit.style.opacity = 0;
+			
+			}
+			
+			
+			// MOVING EVENT
+			var target = storage.target;
+
+            if (target) {
+			
+				var topValue = e.clientY - storage.offsetY;
+				var leftValue = e.clientX - storage.offsetX;
+				
+				
+				
+                target.style.top = topValue + 'px';
+                target.style.left = leftValue + 'px';
+				
+				stretch.style.opacity = 0;
+				edit.style.opacity = 0;
+				
+				move.style.top = e.clientY;
+				move.style.left = e.clientX;
+				move.style.marginLeft = 0;
+			    move.style.marginTop = 0;
+				
+            }
+			
+			
+			
+	});
+			
+		
+	function fixGizmoPosition(e){
+	
+	
+	if(elementAssigned){
+	
+		stretch.style.top = elementAssigned.style.top;
+		stretch.style.left = elementAssigned.style.left;				
+		stretch.style.marginLeft = cSI(elementAssigned.style.width ) - stretch.width/2;
+		stretch.style.marginTop = cSI(elementAssigned.style.height ) - stretch.height/2;					
+		
+		move.style.top = elementAssigned.style.top;
+		move.style.left = elementAssigned.style.left;				
+		move.style.marginLeft = cSI(elementAssigned.style.width ) - move.width/2 + gizmoW;
+		move.style.marginTop = cSI(elementAssigned.style.height ) - move.height/2;			
+	
+		edit.style.top = elementAssigned.style.top;
+		edit.style.left = elementAssigned.style.left;				
+		edit.style.marginLeft = cSI(elementAssigned.style.width ) - edit.width/2 + gizmoW*2;
+		edit.style.marginTop = cSI(elementAssigned.style.height ) - edit.height/2;	
+	
+	}
+	else
+	{
+
+		stretch.style.top = e.target.style.top;
+		stretch.style.left = e.target.style.left;				
+		stretch.style.marginLeft = cSI(e.target.style.width ) - stretch.width/2;
+		stretch.style.marginTop = cSI(e.target.style.height ) - stretch.height/2;					
+		
+		move.style.top = e.target.style.top;
+		move.style.left = e.target.style.left;				
+		move.style.marginLeft = cSI(e.target.style.width ) - move.width/2 + gizmoW;
+		move.style.marginTop = cSI(e.target.style.height ) - move.height/2;			
+		
+		edit.style.top = e.target.style.top;
+		edit.style.left = e.target.style.left;				
+		edit.style.marginLeft = cSI(e.target.style.width ) - edit.width/2 + gizmoW*2;
+		edit.style.marginTop = cSI(e.target.style.height ) - edit.height/2;			
+	
+		}
+	
+	}
+		
+	function displayGizmo(){
+	
+	
+	stretch.style.opacity = 1;
+	move.style.opacity = 1;
+	edit.style.opacity = 1;
+	
+	}
+		
+	function cSI(input){
+	return cleanStringSizeInput(input);
+	}
+	
+	function cleanStringSizeInput(input){
+	
+	input.replace('px','');
+	return parseInt(input, 10);
+	}
+	
+	
+	
+	
+	
+	
+	
+// GIZMO EVENTS	
+	
+
+	// STRETCHING EVENTS
+			stretch.addEventListener('mouseover', function(e) { stretch.src = "icon/stretch3.png" });	
+			stretch.addEventListener('mouseout', function(e) { stretch.src = "icon/stretch2.png" });			
+			stretch.addEventListener('mousedown', function(e) { stretching = true; });
+			
+			stretch.addEventListener('mouseup', function(e) { // Termine le drag & drop
+				
+			move.style.opacity = 1;
+			edit.style.opacity = 1;
+			fixGizmoPosition(e);
+		
+			//UPDATE WIDTH AND HEIGHT of ELEMENT ASSIGNED		
+			updateHTMLElement();	
+			stretching = false;
+			});
+
+
+	// MOVING EVENTS
+			move.addEventListener('mouseover', function(e) { // Demarre le changement de couleur de l'image
+			move.src = "icon/move3.png"
+			});
+				
+			move.addEventListener('mouseout', function(e) { //  Termine le changement de couleur de l'image
+			move.src = "icon/move2.png"
+			});
+			
+			move.addEventListener('mousedown', function(e) { // Demarre le drag & drop
+			moving = true;
+
+			var s = storage;
+			s.target = elementAssigned;
+			s.offsetX = e.clientX - elementAssigned.offsetLeft;
+			s.offsetY = e.clientY - elementAssigned.offsetTop;
+		
+			});
+			
+			move.addEventListener('mouseup', function(e) { // Termine le drag & drop
+			moving = false;
+			storage = {};
+			fixGizmoPosition(e);
+			displayGizmo();
+			updateHTMLElement();
+			});
+
+			
+
+	// EDITING EVENTS
+	
+			edit.addEventListener('mousedown', function(e) { // Demarre le drag & drop
+			
+			editing = !editing;
+			toggleEdit();
+			
+			});
+			
+	
+	
+
+	
+	
+	
+	
+		
+	//SAVE
+	function prepareSaving(){
+
+	$("#savingFileName").fadeIn(fadingTime);
+	
+	}
+	
+
+	// SAVE // DOWNLOADS
+	function saveFile(){
+	
+	$("#savingFileName").css("display","none");
+	
+	var saveNodeElements = [];
+	
+	
+	for(var i = 0 ; i < saveElements.length ; i++){
+	
+	saveNodeElements[i] = saveElements[i].nodeString;
+	
+	}
+	var blob = new Blob(saveNodeElements, {type: "text/plain;charset=utf-8"});
+	saveAs(blob, $("#savingFileName").val()+".html");
+
+	}
+	
+	
+	
+	
+	function nearEquals(valueA,valueB,threshold){
+	
+	var max = Math.max(valueA,valueB);
+	var min = Math.min(valueA,valueB);
+	
+	if(max-min<threshold)return true;
+	
+	return false;
+	
+	}
+	
+	
+	
+	
+	
+	
+	
+			
+// PANEL SCRIPT
+$(document).ready( function () {
+    // On cache les sous-menus :
+	
+	
+	$(".navigation").each(function () {
+	$(".navigation").css('opacity', '1.0');
+	});
+  
+	
+    $(".navigation ul.subMenu").hide();
+    // On sélectionne tous les items de liste portant la classe "toggleSubMenu"
+    // et on remplace l'élément span qu'ils contiennent par un lien :
+    $(".navigation li.toggleSubMenu span").each( function () {
+        // On stocke le contenu du span :
+        var TexteSpan = $(this).text();
+        $(this).replaceWith('<a href="" title="Afficher le sous-menu">' + TexteSpan + '<\/a>') ;
+    } ) ;
+
+    // On modifie l'évènement "click" sur les liens dans les items de liste
+    // qui portent la classe "toggleSubMenu" :
+	
+	 //$(this).next("ul.subMenu").slideUp("normal", function () {   });
+
+    $(".navigation li.toggleSubMenu > a").click( function () {
+	
+	
+        // Si le sous-menu était déjà ouvert, on le referme :
+        if ($(this).next("ul.subMenu:visible").length != 0) {
+		
+	// $(this).next("ul.subMenu").slideUp("normal", function () { $(this).parent().removeClass("open") });
+    $(this).next("ul.subMenu").slideUp("normal", function () {   });
+   
+               }	
+        // Si le sous-menu est caché, on ferme les autres et on l'affiche :
+      
+	  else {
+            $(".navigation ul.subMenu").slideUp("normal", function () { $(this).parent().removeClass("open") });
+            $(this).next("ul.subMenu").slideDown("normal", function () { $(this).parent().addClass("open") });
+        }
+        // On empêche le navigateur de suivre le lien :
+        return false;
+    });
+	
+	
+});
+	
+	
+	
+	
+	
+	
+	// COLOR PICKER
+	var picker = new CP(document.querySelector('#colorPickerInput')),
+    alpha = document.createElement('input');
+	
+	
+	 function change() {
+        var v = picker._HSV2RGB(picker.set());
+        v = this.value == 1 ? 'rgb(' + v.join(', ') + ')' : 'rgba(' + v.join(', ') + ', ' + this.value.replace(/^0\./, '.') + ')';
+        picker.target.value = v;
+        elementAssigned.style.backgroundColor = v;
+    }
+
+    function keep() {
+        window.setTimeout(function() {
+            picker.enter(); // do not hide the color picker on `alpha` mouse-up/toch-end event
+        }, .01);
+    }
+
+    alpha.type = 'range';
+    alpha.min = 0;
+    alpha.max = 1;
+    alpha.step = .01;
+    alpha.value = 1; // opaque
+    alpha.onchange = change;
+    alpha.oninput = change;
+    alpha.onmouseup = keep;
+    alpha.ontouchend = keep;
+
+    picker.picker.appendChild(alpha);
+
+    picker.on("drag", function(color) {
+        var v = picker.HEX2RGB(color);
+        v = alpha.value == 1 ? 'rgb(' + v.join(', ') + ')' : 'rgba(' + v.join(', ') + ', ' + alpha.value.replace(/^0\./, '.') + ')';
+        this.target.value = v;
+        elementAssigned.style.backgroundColor = v;
+    });
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	var Element = class {
+
+	
+	constructor(index,elementObject,nodeString){
+	this.index = index;
+	this.elementObject = elementObject;
+	this.nodeString = nodeString;
+	
+	}
+	
+	
+	}
+
+	
+	
+
+	
+
+</script>
+
+
+<style>
+
+.navigation {
+	position : fixed;
+	left : 50px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: #000;
+  color: #fff;
+  width: 200px;
+  font: 1.2em "Trebuchet MS", sans-serif;
+}
+.navigation a, .navigation span {
+  display: block;
+  padding: 4px 10px;
+  color: #fff;
+  text-decoration: none;
+  
+}
+.navigation .toggleSubMenu a, .navigation .toggleSubMenu span {
+ 
+}
+.navigation .open a, .navigation .open span {
+  
+}
+.navigation a:hover, .navigation a:focus, .navigation a:active {
+  text-decoration: underline;
+}
+.navigation .subMenu {
+  font-size: .8em;
+  
+  font-size: .9em;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid #666;
+}
+.navigation ul.subMenu a {
+  background: none;
+  padding: 3px 20px;
+}
+
+
+</style> 
+
+</body>

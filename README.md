@@ -1,2 +1,3 @@
 # FreeWebsiteBuilder
-A Website builder to quickly design webpages for your websites.
+A Website builder to simply design webpages for your websites.
+
