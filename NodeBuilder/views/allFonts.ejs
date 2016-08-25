@@ -16,14 +16,16 @@
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
-
+		
 	
         <h1>All fonts available</h1>
 
         <select name="font" id="font">
         <% todolist.forEach(function(todo, index) { %>
-            <option value= <%= todo %> style="font-family:<%= todo %>"  > <%= todo %></option>
+            <option value= <%= todo %> index=<%= index %> style="font-family:<%= todo %>"  >  <%= todo %></option>
         <% }); %>
+		
+		
         </select>
 
 		
@@ -32,17 +34,37 @@
 		
 		
 	<script>
+	
+	var indexDeletion = 0;
+	var fontToDelete="";
+	
 	// CHANGE FONT STYLE
 	$( "#font" ).change(function() {
 	$( "#font" ).css("font-family",$( "#font" ).val());
+	indexDeletion = $('#font').find(":selected").attr("index");
+	
+	//alert(indexDeletion);
+	$( "#deletion" ).text( " Delete " + $( "#font" ).val() + " font " );
+	$( "#deletion" ).attr("href","/allFonts/deleteFont/"+indexDeletion);
+	
+	
+	
 	});
 	
 	
 	</script>
 	
+	</br>
+	</br>
+	
 	<a href="/upload">UPLOAD </a>
 
+	</br>
+	</br>
 	
+	
+	<a id="deletion" href="/allFonts/supprimer/"></a>
+		
 	
       
     </body>
