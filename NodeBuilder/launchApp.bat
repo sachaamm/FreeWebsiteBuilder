@@ -1,0 +1,2 @@
+node nodeBuilderApp.js
+pause
