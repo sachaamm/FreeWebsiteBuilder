@@ -1,6 +1,10 @@
 //FONT UPLOADER
-var fs = require("fs");
-
+var fs = require("fs"),
+    path = require("path");
+	
+	//var path = require('path');
+	
+  
 var http = require('http');
 var server = http.createServer();
 
@@ -13,14 +17,10 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 var fileUpload = require('express-fileupload');
 
-// WALK
-var walk = require('walk');
 // ASYNC
 var async = require('async');
 
-// FILES
-var files   = [];
-var lines   = [];
+
 
 // FIRST WE HAVE TO SETUP EXPRESS
 app.use(express.static(__dirname + '/public')); // SET PUBLIC FOLDER CONTENT REACHABLE FOR CLIENT
@@ -29,16 +29,40 @@ app.use(session({secret: 'todotopsecret'})) // ENABLE SESSION
 
 var folderName = 'public/myProjects/';
 
-
-// Walker options
-var walker  = walk.walk('./'+folderName, { followLinks: false });
-walker.on('end', showProjects ); // WHEN WALKER IS READY , WE BUILD THE PROJECTS TREE
-
-
 var projectNames = [];
 var projectName;
+var indexDeletion;
 
 var rootName = '/home';
+
+
+var p = 'public/myProjects'; // PATH TO PROJECTS
+var pathToProjectPages = '';
+
+
+var projectPages = [];
+var projectPath;
+
+
+/*
+fs.readdir(p, buildProjects );
+fs.readdir(p, buildProjectTree );
+*/		
+
+
+
+function buildProjectTree(req,res){
+	
+    //req.session.projects = [];
+	
+	console.log("Render Page with " + projectNames.length+ " Projects ");
+	
+	for(var i = 0 ; i < projectNames.length ; i++){ 
+    		 req.session.projects.push(projectNames[i]);		  
+	}
+	
+	
+}
 
 
 
@@ -46,18 +70,31 @@ var rootName = '/home';
 // DISPLAY FONTS AVAILABLE
 app.get(rootName, function(req, res) { 
 
+
+var files = fs.readdirSync(p);
+projectNames  = [];
+
+for(var i in files) {
+	
+	if(fs.statSync("public/myProjects/"+files[i]).isDirectory())projectNames.push(files[i]);
+
+}
+
+
     req.session.projects = [];
 	
-	console.log("Render " + projectNames.length+ " Projects ");
 	
 	for(var i = 0 ; i < projectNames.length ; i++){ 
     		 req.session.projects.push(projectNames[i]);		  
 	}
 	
-	console.log("Project Names length " + projectNames.length );
+	console.log("Render Page with " + projectNames.length+ " Projects ");
 	
+	
+
 	// WE LOAD ALL PROJECTS AVAILABLE
 	res.render('nodeBuilder/home.ejs', {projects: req.session.projects});
+    
 
 });
 
@@ -69,22 +106,33 @@ app.get('/newProject', function(req, res) {
 });
 
 // CREATE NEW PROJECT
-app.post('/createProject', function(req, res) { 
+app.post('/createProject', function(req, res ) { 
 
 	projectName = req.body.projectName;
 
+	projectPages = [];
+
+	
 	if (!fs.existsSync(projectName)){
 
+		console.log("PROJECT CREATION");
+	
+	    fs.mkdirSync("public/myProjects/" + projectName);
+
+		fs.mkdirSync("public/myProjects/" + projectName + "/pages");
+		fs.mkdirSync("public/myProjects/" + projectName + "/style");
+		fs.mkdirSync("public/myProjects/" + projectName + "/style/fonts");
+		var stream = fs.createWriteStream("public/myProjects/" + projectName + "/style/design.css");
+		stream.once('open', function(fd) {
+		stream.end();
+		});
 		
-		//
-	
-      
-		walker  = walk.walk('./'+folderName, { followLinks: false });
-		walker.on('directories', getProjects ); // WHEN WALKER IS READY , WE BUILD THE PROJECTS TREE
-
-		res.redirect(rootName);
-	
-
+		
+		//fs.readdirSync(p, getDirectories );
+		
+		
+	    res.redirect(rootName);
+	 
 		}else{
 		
 		console.log(" Project Already Exist " + projectName);
@@ -94,59 +142,246 @@ app.post('/createProject', function(req, res) {
 
 });
 
+app.get('/prepareDeletion/:id',function(req, res ) { 
+
+indexDeletion = req.params.id;
+res.render('nodeBuilder/prepareDeletion.ejs',{ value: req.session.projects[req.params.id] } );
+
+});
+
+app.get('/delete',function(req, res ) { 
+
+  if (indexDeletion) {
+	      
+			removeFolder("public/myProjects/" + req.session.projects[indexDeletion]);
 	
+			console.log("delete project");
+			
+		    req.session.projects.splice(req.params.id, 1);
+		    projectNames.splice(req.params.id, 1);
+				
+  }
+	
+    res.redirect('/home');
+
+});
+
+
+app.get('/editProject/:projectName',function(req, res ) { 
+
+  req.session.pages = [];
+  //projectPages = [];
+	  projectPath = "public/myProjects/" + req.params.projectName + "/pages/" ;
+	
+  
+  
+  
+var files = fs.readdirSync(projectPath);
+projectPages  = [];
+
+
+for(var i in files) {
+	
+	if(fs.statSync(projectPath + files[i]).isFile())projectPages.push(files[i]);
+
+}
+
+
+
+  
+ // fs.readdirSync(projectPath, getPages );
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  console.log("projectPages length " + projectPages.length);
+  
+  	for(var i = 0 ; i < projectPages.length ; i++){ 
+    		 req.session.pages.push(projectPages[i]);		  
+	}
+ 
+  res.render('nodeBuilder/editProject.ejs',{ projectName: req.params.projectName , pages: req.session.pages } );
+  
+  
+});
+
+app.get('/editProject/:projectName/addPage',function(req, res ) { 
+
+  res.render('nodeBuilder/addPage.ejs',{ projectName: req.params.projectName } );
+  
+});
+
+app.post('/editProject/:projectName/createPage',function(req, res ) { 
+
+  
+  //create Page
+  	pageName = req.body.pageName;
+	
+	var pagePath = "public/myProjects/" + req.params.projectName + "/pages/";
+
+	var fileName = pageName + ".sg";
+	var finalName = pagePath + fileName;
+
+		
+			if (!fs.existsSync(finalName)){
+
+			console.log("Create New Page.");
+			var stream = fs.createWriteStream( finalName );
+			stream.once('open', function(fd) {
+			stream.end();
+		
+            res.redirect('/editProject/'+req.params.projectName);
+			
+			projectPages.push(pageName);
+
+
+			});
+			
+			
+			
+			}
+
+
+});
+
+
 app.listen(8080);   
 
 
 
 
 
-// INIT PROJECT TREE --> CLEAR PROJECTNAMES ARRAY AND CLEAR SESSION
-var initProjectTree = function(callback){
-	
-	//fs.mkdirSync("public/myProjects/"+projectName);
-
-	  
-	var log = "Init Project Tree";
-	console.log(log);
-
-	//walker.on('directories', getProjects );
-	callback(null,log);
-}
-// PUT PROJECT NAMES IN PROJECTS.SESSION --> PUT PROJECTNAMES ARRAY INPUT  in SESSION
-var putProjectsNamesInSession = function(callback){
-	var log = "Build Project Tree";
-	console.log(log);
-	
-	//walker  = walk.walk('./'+folderName, { followLinks: false });
-	//walker.on('directories', getProjects );
-
-	callback(null,log);
+function removeFolder(path) {
+  if( fs.existsSync(path) ) {
+    fs.readdirSync(path).forEach(function(file,index){
+      var curPath = path + "/" + file;
+      if(fs.lstatSync(curPath).isDirectory()) { // recurse
+       removeFolder(curPath,null);
+      } else { // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+  }
 }
 
-// SHOW PROJECTS
-function showProjects(callback) {
+
+
+
+
+
+function getDirectories (err, files) {
+
+
+	if (err) {
+        throw err;
+    }
+
+    files.map(function (file) {
+        return path.join(p, file);
+    }).filter(function (file) {
+        return fs.statSync(file).isDirectory();
+    }).forEach(function (file) {
+        console.log("%s (%s)", file, path.basename(file));
+		projectNames.push(path.basename(file));
+		
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var loadProjects = function(callback){
+	
+	projectNames = [];
+	
+	var log = "Load Projects";
+	console.log(log);
+	
+	
+	callback(null,log);
+	
+	
+}
+
+var buildProjectData = function(callback){
+	
+	
+	var log = "Build Projects";
+	
+	fs.readdir(p, getDirectories );
+
+	
+	console.log(log);
+	
+	
+	
+	callback(null,log);
+	
+	
+	
+}
+
+
+
+
+
+
+
+
+
+
+function buildProjects(res,callback) {
 	var stack = [];
-
-	stack.push(initProjectTree);
-	stack.push(putProjectsNamesInSession);
+	stack.push(loadProjects);
+	stack.push(buildProjectData);
 	
 	async.parallel(stack, 
 	function(err,log){
 		console.log(log);
 	});
+	
+	//console.log("Render Page with " + projectNames.length+ " Projects ");
+
+	
+	
 }
 
 
-// WALKER FUNCTION
-function getProjects(root, dirStatsArray, next) {
-	
-	console.log("Add Content");
-	
-	for(var i = 0 ; i < dirStatsArray.length ; i++){	
-		console.log(dirStatsArray[i].name);
-	    projectNames.push(dirStatsArray[i].name);
-	}
 
-    next();
-} 
+

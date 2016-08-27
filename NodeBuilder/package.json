@@ -6,7 +6,7 @@
         "ejs": "~2.1.4",
         "cookie-session": "~1.1.0",
         "body-parser": "~1.10.1",
-		"async": "~2.0.1"
+		"path": "~0.12.7"
     },
     "author": "Mateo21 <mateo21@email.com>",
     "description": "Un gestionnaire de todolist ultra basique"
